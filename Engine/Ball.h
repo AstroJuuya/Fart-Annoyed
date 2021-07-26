@@ -11,6 +11,7 @@ public:
 	void ReboundX();
 	void ReboundY();
 	void Draw(Graphics& gfx) const;
+	RectF GetRect() const;
 	bool HasCollided() const;
 private:
 	static constexpr float radius = 7.0f;
