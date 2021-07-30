@@ -15,6 +15,11 @@ void Brick::DoBallCollision(Ball& ball)
 	}
 }
 
+void Brick::Draw(Graphics& gfx, Color color) const
+{
+	brick.Draw(gfx, color);
+}
+
 bool Brick::IsOverlappingWith(const RectF& other) const
 {
 	return brick.left < other.right && brick.top < other.bottom

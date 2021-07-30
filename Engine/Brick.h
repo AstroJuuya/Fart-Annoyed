@@ -8,6 +8,7 @@ class Brick
 public:
 	Brick(const RectF& rect);
 	void DoBallCollision(Ball& ball);
+	void Draw(Graphics& gfx, Color color) const;
 	bool IsOverlappingWith(const RectF& other) const;
 private:
 	RectF brick;
