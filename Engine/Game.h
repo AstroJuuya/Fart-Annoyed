@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Ball.h"
 #include "Brick.h"
+#include "Paddle.h"
 #include "FrameTimer.h"
 
 class Game
@@ -45,6 +46,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	Keyboard kbd;
 	Ball ball;
 	static constexpr int rows = 4;
 	static constexpr int cols = 12;
@@ -53,6 +55,13 @@ private:
 	static constexpr float border = 0.5f;
 	static constexpr Color brick_color[rows]{ Colors::Cyan, Colors::Green, Colors::Yellow, Colors::Red };
 	Brick bricks[rows][cols];
+	Paddle paddle;
+	static constexpr float paddle_width = 40.0f;
+	static constexpr float paddle_height = 10.0f;
+	static constexpr float paddle_speed = 400.0f;
+	static constexpr Color paddle_color = Colors::White;
+	static constexpr float paddle_wingspan = 10.0f;
+	static constexpr Color paddle_wing_color = Colors::Red;
 	RectF walls;
 	FrameTimer ft;
 	/********************************/

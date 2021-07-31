@@ -27,6 +27,7 @@ Game::Game( MainWindow& wnd )
 	gfx( wnd ),
 	ball( Vec2( 200.0f, 400.0f ), Vec2( 400.0f, -400.0f ) ),
 	bricks(),
+	paddle( RectF().fromCenter( Vec2( 400.0f, 500.0f ), paddle_width, paddle_height ), paddle_speed, paddle_color, paddle_wingspan, paddle_wing_color ),
 	walls( 0, 0, gfx.ScreenWidth, gfx.ScreenHeight )
 {
 	const Vec2 bricks_origin( 100.0f, 50.0f );
@@ -52,6 +53,10 @@ void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
 
+	paddle.Update( wnd, dt );
+	paddle.DoWallCollision( walls );
+	paddle.DoBallCollision( ball );
+
 	ball.Update( dt );
 	for ( int y = 0; y < rows; y++ )
 	{
@@ -76,4 +81,5 @@ void Game::ComposeFrame()
 		}
 	}
 	ball.Draw( gfx );
+	paddle.Draw( gfx );
 }
