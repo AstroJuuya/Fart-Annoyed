@@ -12,7 +12,6 @@ public:
 	void DoBallCollision(Ball& ball);
 	void Draw(Graphics& gfx, Color color) const;
 	void DrawReducedBorder(Graphics& gfx, Color color) const;
-	bool IsOverlappingWith(const RectF& other) const;
 	bool IsDestroyed() const;
 private:
 	RectF brick;

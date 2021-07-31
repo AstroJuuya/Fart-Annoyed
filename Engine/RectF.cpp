@@ -26,6 +26,12 @@ RectF RectF::fromCenter(const Vec2& center, const float half_width, const float 
 	return RectF(center.x - half_width, center.y - half_height, center.x + half_width, center.y + half_height);
 }
 
+bool RectF::IsOverlappingWith(const RectF& other) const
+{
+	return left < other.right && top < other.bottom
+		&& right > other.left && bottom > other.top;
+}
+
 void RectF::Draw(Graphics& gfx, Color color) const
 {
 	gfx.DrawRect( int( left ), int( top ), int( right ), int( bottom ), color );

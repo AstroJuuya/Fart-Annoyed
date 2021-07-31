@@ -13,7 +13,7 @@ void Brick::SetBorder(const float border)
 
 void Brick::DoBallCollision(Ball& ball)
 {
-	if (IsOverlappingWith(ball.GetRect()) && !destroyed )
+	if (brick.IsOverlappingWith(ball.GetRect()) && !destroyed )
 	{
 		RectF b = ball.GetRect();
 		if (	( abs(b.right - brick.left) <= abs(b.bottom - brick.top) && abs(b.right - brick.left) <= abs(b.top - brick.bottom) ) 
@@ -38,12 +38,6 @@ void Brick::Draw(Graphics& gfx, Color color) const
 void Brick::DrawReducedBorder(Graphics& gfx, Color color) const
 {
 	RectF( Vec2( brick.left + brdr, brick.top + brdr ), Vec2( brick.right - brdr, brick.bottom - brdr) ).Draw(gfx, color);
-}
-
-bool Brick::IsOverlappingWith(const RectF& other) const
-{
-	return brick.left < other.right && brick.top < other.bottom
-		&& brick.right > other. left && brick.bottom > other.top;
 }
 
 bool Brick::IsDestroyed() const

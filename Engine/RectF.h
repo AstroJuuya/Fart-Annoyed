@@ -11,6 +11,7 @@ public:
 	RectF( const Vec2& top_left, const Vec2& bottom_right);
 	RectF( const Vec2& top_left, const float width, const float height);
 	static RectF fromCenter( const Vec2& center, const float half_width, const float half_height);
+	bool IsOverlappingWith(const RectF& other) const;
 	void Draw(Graphics& gfx, const Color color) const;
 public:
 	float left;
