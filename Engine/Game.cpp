@@ -24,8 +24,20 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	ball( Vec2( 200.0f, 400.0f ), Vec2( 400.0f, -400.0f ) ),
+	bricks(),
+	walls( 0, 0, gfx.ScreenWidth, gfx.ScreenHeight )
 {
+	const Vec2 bricks_origin( 100.0f, 50.0f );
+	for ( int y = 0; y < rows; y++ )
+	{
+		for ( int x = 0; x < cols; x++ )
+		{
+			bricks[y][x] = RectF( bricks_origin + Vec2( width * x, height * y ), width, height );
+			bricks[y][x].SetBorder( border );
+		}
+	}
 }
 
 void Game::Go()
@@ -38,8 +50,30 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float dt = ft.Mark();
+
+	ball.Update( dt );
+	for ( int y = 0; y < rows; y++ )
+	{
+		for ( int x = 0; x < cols; x++ )
+		{
+			bricks[y][x].DoBallCollision( ball );
+		}
+	}
+	ball.DoWallCollision( walls );
 }
 
 void Game::ComposeFrame()
 {
+	for ( int y = 0; y < rows; y++ )
+	{
+		for ( int x = 0; x < cols; x++ )
+		{
+			if ( !bricks[y][x].IsDestroyed() )
+			{
+				bricks[y][x].DrawReducedBorder( gfx, brick_color[y] );
+			}
+		}
+	}
+	ball.Draw( gfx );
 }
