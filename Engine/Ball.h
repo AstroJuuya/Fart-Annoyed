@@ -4,16 +4,17 @@
 #include "RectF.h"
 #include "SpriteCodex.h"
 #include "FrameTimer.h"
+#include <stdexcept>
 
 class Ball
 {
 public:
-	Ball(Vec2 pos, Vec2 vel);
+	Ball(const Vec2& pos, const Vec2& vel);
 	void Update(const float delta_time);
-	void ReboundX();
-	void ReboundY();
+	void ReboundX(const RectF& other);
+	void ReboundY(const RectF& other);
 	void Draw(Graphics& gfx) const;
-	void DoWallCollision(RectF walls);
+	void DoWallCollision(const RectF& walls);
 	RectF GetRect() const;
 	bool HasCollided() const;
 private:

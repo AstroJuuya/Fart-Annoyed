@@ -14,12 +14,12 @@ void Brick::DoBallCollision(Ball& ball)
 		if (	( abs(b.right - brick.left) <= abs(b.bottom - brick.top) && abs(b.right - brick.left) <= abs(b.top - brick.bottom) ) 
 			||	( abs(b.left - brick.right) <= abs(b.bottom - brick.top) && abs(b.left - brick.right) <= abs(b.top - brick.bottom) ) )
 		{
-			ball.ReboundX();
+			ball.ReboundX(brick);
 		}
 		if (	( abs(b.bottom - brick.top) <= abs(b.right - brick.left) && abs(b.bottom - brick.top) <= abs(b.left - brick.right) )
 			||	( abs(b.top - brick.bottom) <= abs(b.right - brick.left) && abs(b.top - brick.bottom) <= abs(b.left - brick.right) ) )
 		{
-			ball.ReboundY();
+			ball.ReboundY(brick);
 		}
 		destroyed = true;
 	}
