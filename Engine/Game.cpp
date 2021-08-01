@@ -28,7 +28,9 @@ Game::Game( MainWindow& wnd )
 	ball( Vec2( 200.0f, 400.0f ), Vec2( 400.0f, -400.0f ) ),
 	bricks(),
 	paddle( RectF().fromCenter( Vec2( 400.0f, 500.0f ), paddle_width, paddle_height ), paddle_speed, paddle_color, paddle_wingspan, paddle_wing_color ),
-	walls( 0, 0, gfx.ScreenWidth, gfx.ScreenHeight )
+	walls( 0, 0, gfx.ScreenWidth, gfx.ScreenHeight ),
+	brickHit( L"Sounds\\arkbrick.wav" ),
+	paddleHit( L"Sounds\\arkpad.wav" )
 {
 	const Vec2 bricks_origin( 100.0f, 50.0f );
 	for ( int y = 0; y < rows; y++ )
@@ -55,17 +57,31 @@ void Game::UpdateModel()
 
 	paddle.Update( wnd, dt );
 	paddle.DoWallCollision( walls );
-	paddle.DoBallCollision( ball );
 
-	ball.Update( dt );
+	ball.Update(dt);
+	paddle.DoBallCollision(ball);
+	ball.DoWallCollision(walls);
+
+	if (ball.HasCollided())
+	{
+		paddleHit.Play( 1.0f, volume );
+	}
+
 	for ( int y = 0; y < rows; y++ )
 	{
 		for ( int x = 0; x < cols; x++ )
 		{
-			bricks[y][x].DoBallCollision( ball );
+			if ( !ball.HasCollided() )
+			{
+				bricks[y][x].DoBallCollision( ball );
+
+				if ( bricks[y][x].IsDestroyed() && ball.HasCollided() )
+				{
+					brickHit.Play( 1.0f, volume );
+				}
+			}
 		}
 	}
-	ball.DoWallCollision( walls );
 }
 
 void Game::ComposeFrame()
@@ -80,6 +96,7 @@ void Game::ComposeFrame()
 			}
 		}
 	}
+
 	ball.Draw( gfx );
 	paddle.Draw( gfx );
 }

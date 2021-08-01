@@ -10,6 +10,7 @@ Ball::Ball(const Vec2& pos, const Vec2& vel)
 void Ball::Update(const float delta_time)
 {
 	pos += vel * delta_time;
+	collided = false;
 }
 
 void Ball::ReboundX(const RectF& other)
@@ -55,22 +56,26 @@ void Ball::DoWallCollision(const RectF& walls)
 	{
 		pos.x += walls.left - (pos.x - radius);
 		vel.x = -vel.x;
+		collided = true;
 	}
 	else if (pos.x + radius >= walls.right)
 	{
 		pos.x += walls.right - (pos.x + radius);
 		vel.x = -vel.x;
+		collided = true;
 	}
 
 	if (pos.y - radius < walls.top)
 	{
 		pos.y += walls.top - (pos.y - radius);
 		vel.y = -vel.y;
+		collided = true;
 	}
 	else if (pos.y + radius >= walls.bottom)
 	{
 		pos.y += walls.bottom - (pos.y + radius);
 		vel.y = -vel.y;
+		collided = true;
 	}
 }
 

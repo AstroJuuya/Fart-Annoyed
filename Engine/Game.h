@@ -27,6 +27,7 @@
 #include "Brick.h"
 #include "Paddle.h"
 #include "FrameTimer.h"
+#include "Sound.h"
 
 class Game
 {
@@ -64,5 +65,8 @@ private:
 	static constexpr Color paddle_wing_color = Colors::Red;
 	RectF walls;
 	FrameTimer ft;
+	Sound paddleHit;	
+	Sound brickHit;
+	static constexpr float volume = 0.2f;
 	/********************************/
 };
