@@ -13,18 +13,36 @@ void Brick::SetBorder(const float border)
 
 void Brick::DoBallCollision(Ball& ball)
 {
+	// Compares penetration depth on each side and rebounds the shallowest side
 	if (brick.IsOverlappingWith(ball.GetRect()) && !destroyed )
 	{
-		RectF b = ball.GetRect();
+		const RectF b = ball.GetRect();
+		const Vec2 center = Vec2( ( brick.right - brick.left ) / 2, ( brick.bottom - brick.top ) / 2 );
 		if (	( abs(b.right - brick.left) <= abs(b.bottom - brick.top) && abs(b.right - brick.left) <= abs(b.top - brick.bottom) ) 
 			||	( abs(b.left - brick.right) <= abs(b.bottom - brick.top) && abs(b.left - brick.right) <= abs(b.top - brick.bottom) ) )
 		{
-			ball.ReboundX(brick);
+			// Check if the ball is actually moving towards the other object otherwise rebound the other way
+			if ( signbit( (ball.GetPosition() - center).GetLengthSq() ) == signbit( ball.GetVelocity().GetLengthSq() ) )
+			{
+				ball.ReboundX(brick);
+			}
+			else
+			{
+				ball.ReboundY(brick);
+			}
+			
 		}
 		if (	( abs(b.bottom - brick.top) <= abs(b.right - brick.left) && abs(b.bottom - brick.top) <= abs(b.left - brick.right) )
 			||	( abs(b.top - brick.bottom) <= abs(b.right - brick.left) && abs(b.top - brick.bottom) <= abs(b.left - brick.right) ) )
 		{
-			ball.ReboundY(brick);
+			if ( signbit( (ball.GetPosition() - center).GetLengthSq() ) == signbit( ball.GetVelocity().GetLengthSq() ) )
+			{
+				ball.ReboundY(brick);
+			}
+			else
+			{
+				ball.ReboundX(brick);
+			}
 		}
 		destroyed = true;
 	}
