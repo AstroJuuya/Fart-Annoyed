@@ -2,7 +2,11 @@
 
 Brick::Brick(const RectF& rect)
 	:
-	brick( rect )
+	brick( rect ),
+	topLeft(rect.left, rect.top),
+	topRight(rect.right, rect.top),
+	bottomLeft(rect.left, rect.bottom),
+	bottomRight(rect.right, rect.bottom)
 {
 }
 
@@ -21,30 +25,101 @@ void Brick::DoBallCollision(Ball& ball)
 		if (	( abs(b.right - brick.left) <= abs(b.bottom - brick.top) && abs(b.right - brick.left) <= abs(b.top - brick.bottom) ) 
 			||	( abs(b.left - brick.right) <= abs(b.bottom - brick.top) && abs(b.left - brick.right) <= abs(b.top - brick.bottom) ) )
 		{
-			// Check if the ball is actually moving towards the other object otherwise rebound the other way
-			if ( signbit( (ball.GetPosition() - center).GetLengthSq() ) == signbit( ball.GetVelocity().GetLengthSq() ) )
+			// Check if ball's center is outside the brick's vicinity i.e. off one of the corners
+			if (	
+					ball.GetPosition().x < brick.left	&& ball.GetPosition().y > brick.bottom	||
+					ball.GetPosition().x < brick.left	&& ball.GetPosition().y < brick.top		||
+					ball.GetPosition().x > brick.right	&& ball.GetPosition().y > brick.bottom	||
+					ball.GetPosition().x > brick.right	&& ball.GetPosition().y < brick.top	
+				)
 			{
-				ball.ReboundX(brick);
+				const Vec2 corners[4] = { topLeft, topRight, bottomLeft, bottomRight };
+				float cornerDist[4];
+
+				for (int i = 0; i < 4; i++)
+				{
+					cornerDist[i] = ( corners[i] - ball.GetPosition() ).GetLengthSq();
+					if ( cornerDist[i] < ball.GetRadius() * ball.GetRadius() )
+					{
+						// Check if the ball is actually moving towards the other object otherwise rebound the other way
+						if (signbit((ball.GetPosition() - center).GetLengthSq()) == signbit(ball.GetVelocity().GetLengthSq()))
+						{
+							ball.ReboundX(brick);
+							destroyed = true;
+						}
+						else
+						{
+							ball.ReboundY(brick);
+							destroyed = true;
+						}
+					}
+				}
 			}
 			else
 			{
-				ball.ReboundY(brick);
+				// Check if the ball is actually moving towards the other object otherwise rebound the other way
+				if ( signbit( (ball.GetPosition() - center).GetLengthSq() ) == signbit( ball.GetVelocity().GetLengthSq() ) )
+				{
+					ball.ReboundX(brick);
+					destroyed = true;
+				}
+				else
+				{
+					ball.ReboundY(brick);
+					destroyed = true;
+				}
 			}
-			
 		}
 		if (	( abs(b.bottom - brick.top) <= abs(b.right - brick.left) && abs(b.bottom - brick.top) <= abs(b.left - brick.right) )
 			||	( abs(b.top - brick.bottom) <= abs(b.right - brick.left) && abs(b.top - brick.bottom) <= abs(b.left - brick.right) ) )
 		{
-			if ( signbit( (ball.GetPosition() - center).GetLengthSq() ) == signbit( ball.GetVelocity().GetLengthSq() ) )
+			bool centerOutside = true;
+			const Vec2 corners[4] = { topLeft, topRight, bottomLeft, bottomRight };
+			float cornerDist[4];
+
+			if (
+				ball.GetPosition().x < brick.left && ball.GetPosition().y > brick.bottom ||
+				ball.GetPosition().x < brick.left && ball.GetPosition().y < brick.top ||
+				ball.GetPosition().x > brick.right && ball.GetPosition().y > brick.bottom ||
+				ball.GetPosition().x > brick.right && ball.GetPosition().y < brick.top
+				)
 			{
-				ball.ReboundY(brick);
+				const Vec2 corners[4] = { topLeft, topRight, bottomLeft, bottomRight };
+				float cornerDist[4];
+
+				for (int i = 0; i < 4; i++)
+				{
+					cornerDist[i] = (corners[i] - ball.GetPosition()).GetLengthSq();
+					if (cornerDist[i] < ball.GetRadius() * ball.GetRadius())
+					{
+						// Check if the ball is actually moving towards the other object otherwise rebound the other way
+						if (signbit((ball.GetPosition() - center).GetLengthSq()) == signbit(ball.GetVelocity().GetLengthSq()))
+						{
+							ball.ReboundY(brick);
+							destroyed = true;
+						}
+						else
+						{
+							ball.ReboundX(brick);
+							destroyed = true;
+						}
+					}
+				}
 			}
 			else
 			{
-				ball.ReboundX(brick);
+				if ( signbit( (ball.GetPosition() - center).GetLengthSq() ) == signbit( ball.GetVelocity().GetLengthSq() ) )
+				{
+					ball.ReboundY(brick);
+					destroyed = true;
+				}
+				else
+				{
+					ball.ReboundX(brick);
+					destroyed = true;
+				}
 			}
 		}
-		destroyed = true;
 	}
 }
 

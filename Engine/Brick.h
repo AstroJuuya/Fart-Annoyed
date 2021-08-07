@@ -16,6 +16,10 @@ public:
 	bool IsDestroyed() const;
 private:
 	RectF brick;
+	Vec2 topLeft;
+	Vec2 topRight;
+	Vec2 bottomLeft;
+	Vec2 bottomRight;
 	bool destroyed = false;
 	float brdr;
 };
