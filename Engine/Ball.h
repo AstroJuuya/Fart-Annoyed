@@ -18,9 +18,11 @@ public:
 	Vec2 GetPosition() const;
 	Vec2 GetVelocity() const;
 	bool HasCollided() const;
+	bool IsDestroyed() const;
 private:
 	static constexpr float radius = 7.0f;
 	Vec2 pos;
 	Vec2 vel;
 	bool collided = false;
+	bool destroyed = false;
 };

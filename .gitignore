@@ -246,3 +246,5 @@ ModelManifest.xml
 
 # Precompiled Shader Header Files
 *.shh
+/Engine/Sounds/fart.wav
+/Engine/Sounds/ready.wav

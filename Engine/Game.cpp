@@ -30,7 +30,9 @@ Game::Game( MainWindow& wnd )
 	paddle( RectF().fromCenter( Vec2( 400.0f, 500.0f ), paddle_width, paddle_height ), paddle_speed, paddle_color, paddle_wingspan, paddle_wing_color ),
 	walls( 0, 0, gfx.ScreenWidth, gfx.ScreenHeight ),
 	brickHit( L"Sounds\\arkbrick.wav" ),
-	paddleHit( L"Sounds\\arkpad.wav" )
+	paddleHit( L"Sounds\\arkpad.wav" ),
+	titleMusic( L"Sounds\\ready.wav" ),
+	gameoverSound( L"Sounds\\fart.wav" )
 {
 	const Vec2 bricks_origin( 100.0f, 50.0f );
 	for ( int y = 0; y < rows; y++ )
@@ -41,6 +43,8 @@ Game::Game( MainWindow& wnd )
 			bricks[y][x].SetBorder( border );
 		}
 	}
+
+	titleMusic.Play(1.0f, volume);
 }
 
 void Game::Go()
@@ -56,7 +60,12 @@ void Game::UpdateModel()
 	const float dt = ft.Mark();
 	float dtRemaining = dt;
 
-	while ( dtRemaining > 0.0f )
+	if ( title && wnd.kbd.KeyIsPressed(VK_RETURN) )
+	{
+		title = false;
+	}
+
+	while ( dtRemaining > 0.0f && !gameover && !title )
 	{
 		const float step = dtRemaining > simulationStep ? simulationStep : dtRemaining;
 		dtRemaining -= simulationStep;
@@ -66,7 +75,13 @@ void Game::UpdateModel()
 
 		ball.Update(step);
 		paddle.DoBallCollision(ball);
+
 		ball.DoWallCollision(walls);
+		if( ball.IsDestroyed() )
+		{
+			gameover = true;
+			gameoverSound.Play(1.0f, volume);
+		}
 
 		if (ball.HasCollided())
 		{
@@ -93,17 +108,29 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	for ( int y = 0; y < rows; y++ )
+	if( !title )
 	{
-		for ( int x = 0; x < cols; x++ )
+		for ( int y = 0; y < rows; y++ )
 		{
-			if ( !bricks[y][x].IsDestroyed() )
+			for ( int x = 0; x < cols; x++ )
 			{
-				bricks[y][x].DrawReducedBorder( gfx, brick_color[y] );
+				if ( !bricks[y][x].IsDestroyed() )
+				{
+					bricks[y][x].DrawReducedBorder( gfx, brick_color[y] );
+				}
 			}
 		}
-	}
 
-	ball.Draw( gfx );
-	paddle.Draw( gfx );
+		ball.Draw( gfx );
+		paddle.Draw( gfx );
+
+		if ( gameover )
+		{
+			SpriteCodex::DrawGameOver( Vec2( gfx.ScreenWidth / 2, gfx.ScreenHeight / 2 ), gfx );
+		}
+	}
+	else
+	{
+		SpriteCodex::DrawTitle( Vec2( gfx.ScreenWidth / 2, gfx.ScreenHeight / 2 ), gfx );
+	}
 }

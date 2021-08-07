@@ -53,6 +53,11 @@ private:
 	FrameTimer ft;
 	static constexpr float simulationStep = 0.0025f;
 
+	bool title = true;
+	bool gameover = false;
+
+	Sound gameoverSound;
+	Sound titleMusic;
 	Sound paddleHit;
 	Sound brickHit;
 	static constexpr float volume = 0.2f;

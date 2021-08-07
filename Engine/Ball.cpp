@@ -78,7 +78,7 @@ void Ball::DoWallCollision(const RectF& walls)
 	{
 		pos.y += walls.bottom - (pos.y + radius);
 		vel.y = -vel.y;
-		collided = true;
+		destroyed = true;
 	}
 }
 
@@ -100,4 +100,9 @@ Vec2 Ball::GetVelocity() const
 bool Ball::HasCollided() const
 {
 	return collided;
+}
+
+bool Ball::IsDestroyed() const
+{
+	return destroyed;
 }
