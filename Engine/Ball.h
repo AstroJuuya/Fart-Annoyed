@@ -12,6 +12,8 @@ public:
 	void Update(const float delta_time);
 	void ReboundX(const RectF& other);
 	void ReboundY(const RectF& other);
+	void ReboundPadX(const RectF& paddle);
+	void ReboundPadY(const RectF& paddle);
 	void Draw(Graphics& gfx) const;
 	void DoWallCollision(const RectF& walls);
 	RectF GetRect() const;
@@ -23,6 +25,7 @@ private:
 	static constexpr float radius = 7.0f;
 	Vec2 pos;
 	Vec2 vel;
+	float velXMax;
 	bool collided = false;
 	bool destroyed = false;
 };

@@ -42,12 +42,12 @@ void Paddle::DoBallCollision( Ball& ball ) const
 		if (	( abs( b.right - paddle.left ) <= abs( b.bottom - paddle.top ) && abs( b.right - paddle.left ) <= abs( b.top - paddle.bottom ) )
 			||	( abs( b.left - paddle.right ) <= abs( b.bottom - paddle.top ) && abs( b.left - paddle.right ) <= abs( b.top - paddle.bottom ) ) )
 		{
-			ball.ReboundX(paddle);
+			ball.ReboundPadX(paddle);
 		}
 		if (	( abs( b.bottom - paddle.top ) <= abs( b.right - paddle.left ) && abs( b.bottom - paddle.top ) <= abs( b.left - paddle.right ) )
 			||	( abs( b.top - paddle.bottom ) <= abs( b.right - paddle.left ) && abs( b.top - paddle.bottom ) <= abs( b.left - paddle.right ) ) )
 		{
-			ball.ReboundY(paddle);
+			ball.ReboundPadY(paddle);
 		}
 	}
 }
