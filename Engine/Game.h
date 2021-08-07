@@ -48,7 +48,17 @@ private:
 	/********************************/
 	/*  User Variables              */
 	Keyboard kbd;
+
+	RectF walls;
+	FrameTimer ft;
+	static constexpr float simulationStep = 0.0025f;
+
+	Sound paddleHit;
+	Sound brickHit;
+	static constexpr float volume = 0.2f;
+
 	Ball ball;
+
 	static constexpr int rows = 4;
 	static constexpr int cols = 12;
 	static constexpr float width = 50.0f;
@@ -56,6 +66,7 @@ private:
 	static constexpr float border = 0.5f;
 	static constexpr Color brick_color[rows]{ Colors::Cyan, Colors::Green, Colors::Yellow, Colors::Red };
 	Brick bricks[rows][cols];
+
 	Paddle paddle;
 	static constexpr float paddle_width = 40.0f;
 	static constexpr float paddle_height = 10.0f;
@@ -63,10 +74,5 @@ private:
 	static constexpr Color paddle_color = Colors::White;
 	static constexpr float paddle_wingspan = 10.0f;
 	static constexpr Color paddle_wing_color = Colors::Red;
-	RectF walls;
-	FrameTimer ft;
-	Sound paddleHit;	
-	Sound brickHit;
-	static constexpr float volume = 0.2f;
 	/********************************/
 };

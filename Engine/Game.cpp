@@ -54,30 +54,37 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	const float dt = ft.Mark();
+	float dtRemaining = dt;
 
-	paddle.Update( wnd, dt );
-	paddle.DoWallCollision( walls );
-
-	ball.Update(dt);
-	paddle.DoBallCollision(ball);
-	ball.DoWallCollision(walls);
-
-	if (ball.HasCollided())
+	while ( dtRemaining > 0.0f )
 	{
-		paddleHit.Play( 1.0f, volume );
-	}
+		const float step = dtRemaining > simulationStep ? simulationStep : dtRemaining;
+		dtRemaining -= simulationStep;
 
-	for ( int y = 0; y < rows; y++ )
-	{
-		for ( int x = 0; x < cols; x++ )
+		paddle.Update( wnd, step );
+		paddle.DoWallCollision( walls );
+
+		ball.Update(step);
+		paddle.DoBallCollision(ball);
+		ball.DoWallCollision(walls);
+
+		if (ball.HasCollided())
 		{
-			if ( !ball.HasCollided() )
-			{
-				bricks[y][x].DoBallCollision( ball );
+			paddleHit.Play( 1.0f, volume );
+		}
 
-				if ( bricks[y][x].IsDestroyed() && ball.HasCollided() )
+		for ( int y = 0; y < rows; y++ )
+		{
+			for ( int x = 0; x < cols; x++ )
+			{
+				if ( !ball.HasCollided() )
 				{
-					brickHit.Play( 1.0f, volume );
+					bricks[y][x].DoBallCollision( ball );
+
+					if ( bricks[y][x].IsDestroyed() && ball.HasCollided() )
+					{
+						brickHit.Play( 1.0f, volume );
+					}
 				}
 			}
 		}
