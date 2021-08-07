@@ -4,7 +4,8 @@ Ball::Ball(const Vec2& pos, const Vec2& vel)
 	:
 	pos( pos ),
 	vel( vel ),
-	velXMax( abs(vel.x) )
+	setVelX( abs(vel.x) ),
+	setVelY( abs(vel.y) )
 {
 }
 
@@ -23,12 +24,14 @@ void Ball::ReboundX(const RectF& other)
 		pos.x += other.left - (pos.x + radius);
 		vel.x = -vel.x;
 		collided = true;
+		collidedPad = false;
 	}
 	else if (pos.x + radius >= other.right)
 	{
 		pos.x += other.right - (pos.x - radius);
 		vel.x = -vel.x;
 		collided = true;
+		collidedPad = false;
 	}
 }
 
@@ -39,23 +42,29 @@ void Ball::ReboundY(const RectF& other)
 		pos.y += other.top - (pos.y + radius);
 		vel.y = -vel.y;
 		collided = true;
+		collidedPad = false;
 	}
 	else if (pos.y + radius >= other.bottom)
 	{
 		pos.y += other.bottom - (pos.y - radius);
 		vel.y = -vel.y;
 		collided = true;
+		collidedPad = false;
 	}
 }
 
 void Ball::ReboundPadX(const RectF& paddle)
 {
-	ReboundX( paddle );
+	if (!collidedPad)
+	{
+		ReboundX( paddle );
+		collidedPad = true;
+	}
 }
 
 void Ball::ReboundPadY(const RectF& paddle)
 {
-	if (pos.y - radius < paddle.top)
+	if (pos.y - radius < paddle.top && !collidedPad)
 	{
 		const Vec2 paddleCenter = Vec2( paddle.right - ( paddle.right - paddle.left ) / 2, paddle.bottom - ( paddle.bottom - paddle.top ) / 2);
 
@@ -67,23 +76,18 @@ void Ball::ReboundPadY(const RectF& paddle)
 		if ( impactX != 0.0f )
 		{
 			const float newVelDel = impactX / padWidth;
-			float newVel = velXMax * newVelDel;
-			const float overspeedAmount = abs(newVel) - velXMax;
+			float newVel = setVelX * newVelDel;
 
-			if ( overspeedAmount > 1.0f )
-			{
-				// correct new velocity if it is over the on creation set max speed 
-				newVel -= overspeedAmount;
-			}
 			vel.x = newVel;
+			vel.y = -( setVelY * ( 2.0f - abs(newVelDel) ) );
 		}
 		else
 		{
 			vel.x = 0.0f;
+			vel.y = setVelY * 2.0f;
 		}
-		
-		vel.y = -vel.y;
 		collided = true;
+		collidedPad = true;
 	}
 }
 
@@ -100,12 +104,14 @@ void Ball::DoWallCollision(const RectF& walls)
 		pos.x += walls.left - (pos.x - radius);
 		vel.x = -vel.x;
 		collided = true;
+		collidedPad = false;
 	}
 	else if (pos.x + radius >= walls.right)
 	{
 		pos.x += walls.right - (pos.x + radius);
 		vel.x = -vel.x;
 		collided = true;
+		collidedPad = false;
 	}
 
 	if (pos.y - radius < walls.top)
@@ -113,6 +119,7 @@ void Ball::DoWallCollision(const RectF& walls)
 		pos.y += walls.top - (pos.y - radius);
 		vel.y = -vel.y;
 		collided = true;
+		collidedPad = false;
 	}
 	else if (pos.y + radius >= walls.bottom)
 	{
@@ -135,6 +142,11 @@ Vec2 Ball::GetPosition() const
 Vec2 Ball::GetVelocity() const
 {
 	return vel;
+}
+
+float Ball::GetRadius() const
+{
+	return radius;
 }
 
 bool Ball::HasCollided() const

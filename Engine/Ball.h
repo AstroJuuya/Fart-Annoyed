@@ -19,13 +19,16 @@ public:
 	RectF GetRect() const;
 	Vec2 GetPosition() const;
 	Vec2 GetVelocity() const;
+	float GetRadius() const;
 	bool HasCollided() const;
 	bool IsDestroyed() const;
 private:
 	static constexpr float radius = 7.0f;
 	Vec2 pos;
 	Vec2 vel;
-	float velXMax;
+	float setVelX;
+	float setVelY;
 	bool collided = false;
+	bool collidedPad = false;
 	bool destroyed = false;
 };
