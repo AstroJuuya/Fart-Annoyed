@@ -9,12 +9,14 @@ Ball::Ball(const Vec2& pos, const Vec2& vel)
 
 void Ball::Update(const float delta_time)
 {
+	// Moves ball relative to elapsed time, effectively moving the vel value in pixels per second
 	pos += vel * delta_time;
 	collided = false;
 }
 
 void Ball::ReboundX(const RectF& other)
 {
+	// Moves the ball back outside the other rectangle's boundaries before reversing the respective collision velocity
 	if (pos.x - radius < other.left)
 	{
 		pos.x += other.left - (pos.x + radius);
@@ -52,6 +54,7 @@ void Ball::Draw(Graphics& gfx) const
 
 void Ball::DoWallCollision(const RectF& walls)
 {
+	// Moves the ball back within the wall's boundaries before reversing the respective collision velocity
 	if (pos.x - radius < walls.left)
 	{
 		pos.x += walls.left - (pos.x - radius);
@@ -82,6 +85,16 @@ void Ball::DoWallCollision(const RectF& walls)
 RectF Ball::GetRect() const
 {
 	return RectF::fromCenter( pos, radius, radius );
+}
+
+Vec2 Ball::GetPosition() const
+{
+	return pos;
+}
+
+Vec2 Ball::GetVelocity() const
+{
+	return vel;
 }
 
 bool Ball::HasCollided() const
