@@ -75,7 +75,7 @@ private:
 	Paddle paddle;
 	static constexpr float paddle_width = 40.0f;
 	static constexpr float paddle_height = 10.0f;
-	static constexpr float paddle_speed = 400.0f;
+	static constexpr float paddle_speed = 500.0f;
 	static constexpr Color paddle_color = Colors::White;
 	static constexpr float paddle_wingspan = 10.0f;
 	static constexpr Color paddle_wing_color = Colors::Red;

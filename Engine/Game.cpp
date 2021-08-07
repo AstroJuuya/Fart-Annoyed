@@ -25,9 +25,9 @@ Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
 	gfx( wnd ),
-	ball( Vec2( 200.0f, 400.0f ), Vec2( 400.0f, -400.0f ) ),
+	ball( Vec2( 200.0f, 200.0f ), Vec2( 400.0f, 400.0f ) ),
 	bricks(),
-	paddle( RectF().fromCenter( Vec2( 400.0f, 500.0f ), paddle_width, paddle_height ), paddle_speed, paddle_color, paddle_wingspan, paddle_wing_color ),
+	paddle( RectF().fromCenter( Vec2( float(gfx.ScreenWidth / 2), float(gfx.ScreenHeight - 100) ), paddle_width, paddle_height ), paddle_speed, paddle_color, paddle_wingspan, paddle_wing_color ),
 	walls( 0, 0, gfx.ScreenWidth, gfx.ScreenHeight ),
 	brickHit( L"Sounds\\arkbrick.wav" ),
 	paddleHit( L"Sounds\\arkpad.wav" ),
